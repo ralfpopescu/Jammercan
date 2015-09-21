@@ -13,25 +13,33 @@ app.get('/', function(req, res){
   res.render('index', {title: 'Jam Circle'});
 });
 
-var connections = [];
+var connections = {};
+var connectionIds = [];
 
 io.on('connection', function(socket){
-  connections.push(socket);
-  console.log(connections.length);
+  var newId = socket.id;
+  connections[newId] = {
+    socket: socket,
+    keysPressed: {}
+  };
+  connectionIds.push(newId);
+  console.log('user connected');
+  console.log(connectionIds.length + ' users connected');
+
   socket.on('disconnect', function(){
-    console.log('user disconnected');
-    var i = connections.indexOf(socket);
+    var i = connectionIds.indexOf(socket.id);
     if (i > -1) {
-      connections.splice(i, 1);
+      connectionIds.splice(i, 1);
     }
-    console.log(connections.length);
+    delete connections[newId];
+    console.log('user disconnected');
+    console.log(connectionIds.length + ' users connected');
   });
 
   socket.on('message', function(msg) {
     console.log('received message');
-    console.log(msg);
-    connections.forEach(function(s) {
-      s.emit('message', msg);
+    connectionIds.forEach(function(id) {
+      connections[id].socket.emit('message', {id: socket.id, message: msg});
     });
   });
 });
