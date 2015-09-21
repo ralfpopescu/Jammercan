@@ -37,13 +37,30 @@ io.on('connection', function(socket){
   });
 
   socket.on('message', function(msg) {
-    console.log('received message');
-    connectionIds.forEach(function(id) {
-      connections[id].socket.emit('message', {id: socket.id, message: msg});
-    });
+    emitAll('message', {id: socket.id, message: msg});
+  });
+
+  socket.on('keydown', function(keyCode) {
+    var id = socket.id;
+    connections[id].keysPressed[keyCode] = true;
+    var keysPressed = connections[id].keysPressed;
+    emitAll('keysUpdated', {id: id, keysPressed: keysPressed});
+  });
+
+  socket.on('keyup', function(keyCode) {
+    var id = socket.id;
+    delete connections[id].keysPressed[keyCode];
+    var keysPressed = connections[id].keysPressed;
+    emitAll('keysUpdated', {id: id, keysPressed: keysPressed});
   });
 });
 
 http.listen(process.env.PORT || 3000, function(){
   console.log('listening on *:3000');
 });
+
+function emitAll(type, data) {
+  connectionIds.forEach(function(id) {
+    connections[id].socket.emit(type, data);
+  });
+}
