@@ -18,6 +18,7 @@ gainNode.gain.value = volume;
 
 var grandPiano = MIDI.Soundfont.acoustic_grand_piano;
 var grandPianoBuffers = {};
+var noteMap = {65:'C3', 87:'C#3', 83:'D3', 69:'Eb3', 68:'E3', 70:'F3', 84:'F#3', 71:'G3', 89:'Ab3', 72:'A3', 85:'Bb', 74:'B', 75:'C'};
 for (var key in grandPiano) {
   addNoteToBuffer(key, grandPiano, grandPianoBuffers);
 }
