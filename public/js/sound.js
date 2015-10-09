@@ -16,10 +16,17 @@ gainNode.gain.value = volume;
 //   oscillator.stop();
 // }, 1000);
 
-var grandPiano = MIDI.Soundfont.acoustic_grand_piano;
-var grandPianoBuffers = {};
-for (var key in grandPiano) {
-  addNoteToBuffer(key, grandPiano, grandPianoBuffers);
+var bass;
+$.ajax({url: '/js/soundfonts/bass.json', success: function(result){
+  console.log('successfully got file');
+  bass = result;
+}});
+
+function setupInstrument(instrument) {
+  var instrumentBuffers = {};
+  for (var key in instrument) {
+    addNoteToBuffer(key, instrument, instrumentBuffers);
+  }
 }
 
 function addNoteToBuffer(key, instrumentData, instrumentBuffers) {
