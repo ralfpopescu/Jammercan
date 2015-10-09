@@ -11,28 +11,25 @@ oscillator.type = 'sine';
 oscillator.frequency.value = frequency;
 gainNode.gain.value = volume;
 
-// oscillator.start();
-// setTimeout(function() {
-//   oscillator.stop();
-// }, 1000);
+var noteMap = {65:'C3', 87:'Db3', 83:'D3', 69:'Eb3', 68:'E3', 70:'F3', 84:'Gb3', 71:'G3', 89:'Ab3', 72:'A3', 85:'Bb', 74:'B', 75:'C'};
 
-var bass;
-$.ajax({url: '/js/soundfonts/bass.json', success: function(result){
+var currentInstrumentBuffers = {};
+$.ajax({url: '/js/soundfonts/acoustic_grand_piano.json', success: function(result) {
   console.log('successfully got file');
-  bass = result;
+  setupInstrument(result);
 }});
 
 function setupInstrument(instrument) {
-  var instrumentBuffers = {};
+  currentInstrumentBuffers = {};
   for (var key in instrument) {
-    addNoteToBuffer(key, instrument, instrumentBuffers);
+    addNoteToBuffer(key, instrument, currentInstrumentBuffers);
   }
 }
 
 function addNoteToBuffer(key, instrumentData, instrumentBuffers) {
   var noteBuffer = base64ToArrayBuffer(instrumentData[key]);
   audioCtx.decodeAudioData(noteBuffer, function(buffer) {
-    grandPianoBuffers[key] = buffer;
+    instrumentBuffers[key] = buffer;
     if (Object.keys(instrumentData).length === Object.keys(instrumentBuffers).length) {
       console.log('done');
     }

@@ -1,28 +1,41 @@
 var socket = io();
-var messages = $('#messages');
-var keys = $('#keys');
+var keysPressed = {};
+var localKeysPressed = {};
+var socketId;
 
-socket.emit('message', 'hello what\'s up');
-socket.on('message', function(msgData) {
-  var msg = msgData.message;
-  var id = msgData.id;
-  messages.append('<li>' + id + ': ' + msg + '</li>')
+socket.on('setup', function(data) {
+  socketId = data.socketId;
 });
 
-socket.on('keysUpdated', function(keyData) {
-  var id = keyData.id;
-  var keysPressedForId = $('#keys .' + id);
-  if (!keysPressedForId.length) {
-    keys.append('<pre class="' + id + '"></pre>');
-    keysPressedForId = $('#keys .' + id);
+socket.on('start', function(data) {
+  if (noteMap[data.keyCode]) {
+    if (!keysPressed[data.keyCode]) {
+      keysPressed[data.keyCode] = {};
+    }
+
+    keysPressed[data.keyCode][data.socketId] = getAudioBuffer(noteMap[data.keyCode], currentInstrumentBuffers);
+    keysPressed[data.keyCode][data.socketId].start();
+    console.log('started ' + data.keyCode);
   }
-  keysPressedForId.html(JSON.stringify(keyData, null, 2));
+});
+
+socket.on('stop', function(data) {
+  if (keysPressed[data.keyCode]) {
+    keysPressed[data.keyCode][data.socketId].stop();
+    delete keysPressed[data.keyCode];
+    console.log('stopped ' + data.keyCode);
+  }
 });
 
 addEventListener('keydown', function (e) {
-  socket.emit('keydown', e.keyCode);
+  if (!localKeysPressed[e.keyCode]) {
+    socket.emit('keydown', { socketId: socketId, keyCode: e.keyCode });
+  }
+
+  localKeysPressed[e.keyCode] = 1;
 });
 
 addEventListener('keyup', function (e) {
-  socket.emit('keyup', e.keyCode);
+  socket.emit('keyup', { socketId: socketId, keyCode: e.keyCode });
+  delete localKeysPressed[e.keyCode];
 });
