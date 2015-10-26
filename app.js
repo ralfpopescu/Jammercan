@@ -5,62 +5,49 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
 
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', function(req, res){
-  res.render('index', {title: 'Jam Circle'});
+  res.sendfile('views/index.html');
 });
 
 var connections = {};
-var connectionIds = [];
+var numConnections = 0;
 
-io.on('connection', function(socket){
-  var newId = socket.id;
-  connections[newId] = {
-    socket: socket,
-    keysPressed: {}
-  };
-  connectionIds.push(newId);
+io.on('connection', function(socket) {
+  connections[socket.id] = socket;
+  numConnections ++;
+  socket.emit('setup', { socketId: socket.id });
+
   console.log('user connected');
-  console.log(connectionIds.length + ' users connected');
+  console.log(numConnections + ' users connected');
 
   socket.on('disconnect', function(){
-    var i = connectionIds.indexOf(socket.id);
-    if (i > -1) {
-      connectionIds.splice(i, 1);
-    }
-    delete connections[newId];
+    delete connections[socket.id];
+    numConnections --;
+
     console.log('user disconnected');
-    console.log(connectionIds.length + ' users connected');
+    console.log(numConnections + ' users connected');
   });
 
-  socket.on('message', function(msg) {
-    emitAll('message', {id: socket.id, message: msg});
+  socket.on('keyup', function(data) {
+    emitAll('stop', data);
   });
 
-  socket.on('keydown', function(keyCode) {
-    var id = socket.id;
-    connections[id].keysPressed[keyCode] = true;
-    var keysPressed = connections[id].keysPressed;
-    emitAll('keysUpdated', {id: id, keysPressed: keysPressed});
-  });
-
-  socket.on('keyup', function(keyCode) {
-    var id = socket.id;
-    delete connections[id].keysPressed[keyCode];
-    var keysPressed = connections[id].keysPressed;
-    emitAll('keysUpdated', {id: id, keysPressed: keysPressed});
+  socket.on('keydown', function(data) {
+    emitAll('start', data);
   });
 });
 
-http.listen(process.env.PORT || 3000, function(){
+http.listen(process.env.PORT || 3000, function() {
   console.log('listening on *:3000');
 });
 
-function emitAll(type, data) {
-  connectionIds.forEach(function(id) {
-    connections[id].socket.emit(type, data);
-  });
+function emitAll(eventType, data) {
+  for (socketId in connections) {
+    if (connections.hasOwnProperty(socketId)) {
+      connections[socketId].emit(eventType, data)
+    }
+  }
 }
