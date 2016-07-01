@@ -28,6 +28,7 @@ socket.on('stop', function(data) {
 });
 
 addEventListener('keydown', function (e) {
+  e.preventDefault();
   if (!localKeysPressed[e.keyCode]) {
     socket.emit('keydown', { socketId: socketId, keyCode: e.keyCode });
   }
