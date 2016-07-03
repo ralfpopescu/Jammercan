@@ -1,0 +1,128 @@
+{
+  "name": "chordProg1",
+  "sequence": [
+    {
+      "type": "startnote",
+      "note": "C3",
+      "delay": 0
+    },
+    {
+      "type": "startnote",
+      "note": "E3",
+      "delay": 0
+    },
+    {
+      "type": "startnote",
+      "note": "G3",
+      "delay": 0
+    },
+    {
+      "type": "stopnote",
+      "note": "C3",
+      "delay": 4
+    },
+    {
+      "type": "stopnote",
+      "note": "E3",
+      "delay": 0
+    },
+    {
+      "type": "stopnote",
+      "note": "G3",
+      "delay": 0
+    },
+
+    {
+      "type": "startnote",
+      "note": "G2",
+      "delay": 0
+    },
+    {
+      "type": "startnote",
+      "note": "B2",
+      "delay": 0
+    },
+    {
+      "type": "startnote",
+      "note": "D3",
+      "delay": 0
+    },
+    {
+      "type": "stopnote",
+      "note": "G2",
+      "delay": 4
+    },
+    {
+      "type": "stopnote",
+      "note": "B2",
+      "delay": 0
+    },
+    {
+      "type": "stopnote",
+      "note": "D3",
+      "delay": 0
+    },
+
+    {
+      "type": "startnote",
+      "note": "A2",
+      "delay": 0
+    },
+    {
+      "type": "startnote",
+      "note": "C3",
+      "delay": 0
+    },
+    {
+      "type": "startnote",
+      "note": "E3",
+      "delay": 0
+    },
+    {
+      "type": "stopnote",
+      "note": "A2",
+      "delay": 4
+    },
+    {
+      "type": "stopnote",
+      "note": "C3",
+      "delay": 0
+    },
+    {
+      "type": "stopnote",
+      "note": "E3",
+      "delay": 0
+    },
+
+    {
+      "type": "startnote",
+      "note": "F2",
+      "delay": 0
+    },
+    {
+      "type": "startnote",
+      "note": "A2",
+      "delay": 0
+    },
+    {
+      "type": "startnote",
+      "note": "C3",
+      "delay": 0
+    },
+    {
+      "type": "stopnote",
+      "note": "F2",
+      "delay": 4
+    },
+    {
+      "type": "stopnote",
+      "note": "A2",
+      "delay": 0
+    },
+    {
+      "type": "stopnote",
+      "note": "C3",
+      "delay": 0
+    }
+  ]
+}
