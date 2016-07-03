@@ -3,6 +3,7 @@ var express = require('express');
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+var loops = require('./loops.js');
 
 app.set('views', path.join(__dirname, 'views'));
 
@@ -31,12 +32,24 @@ io.on('connection', function(socket) {
     console.log(numConnections + ' users connected');
   });
 
-  socket.on('keyup', function(data) {
+  socket.on('stopnote', function(data) {
     emitAll('stopnote', data);
   });
 
-  socket.on('keydown', function(data) {
+  socket.on('startnote', function(data) {
     emitAll('startnote', data);
+  });
+
+  socket.on('startloop', function(data) {
+    console.log('start loop ' + data.loopname);
+    loops.startLoop(data.loopname, emitAll);
+    emitAll('startloop', data);
+  });
+
+  socket.on('stoploop', function(data) {
+    console.log('stop loop ' + data.loopname);
+    loops.stopLoop(data.loopname);
+    emitAll('stoploop', data);
   });
 });
 
