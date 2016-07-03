@@ -13,7 +13,6 @@ gainNode.gain.value = volume;
 
 var currentInstrumentBuffers = {};
 $.ajax({url: '/js/soundfonts/acoustic_grand_piano.json', success: function(result) {
-  console.log('successfully got file');
   setupInstrument(result);
 }});
 
@@ -29,7 +28,6 @@ function addNoteToBuffer(key, instrumentData, instrumentBuffers) {
   audioCtx.decodeAudioData(noteBuffer, function(buffer) {
     instrumentBuffers[key] = buffer;
     if (Object.keys(instrumentData).length === Object.keys(instrumentBuffers).length) {
-      console.log('done');
     }
   });
 }

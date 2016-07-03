@@ -1,4 +1,4 @@
-var noteMap = {
+var keyboardNoteMap = {
   // bottom row (z-?, a-:)
   90: 'C3',
   83: 'Db3',
