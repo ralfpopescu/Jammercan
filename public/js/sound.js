@@ -11,11 +11,8 @@ oscillator.type = 'sine';
 oscillator.frequency.value = frequency;
 gainNode.gain.value = volume;
 
-var noteMap = {65:'C3', 87:'Db3', 83:'D3', 69:'Eb3', 68:'E3', 70:'F3', 84:'Gb3', 71:'G3', 89:'Ab3', 72:'A3', 85:'Bb', 74:'B', 75:'C'};
-
 var currentInstrumentBuffers = {};
 $.ajax({url: '/js/soundfonts/acoustic_grand_piano.json', success: function(result) {
-  console.log('successfully got file');
   setupInstrument(result);
 }});
 
@@ -31,7 +28,6 @@ function addNoteToBuffer(key, instrumentData, instrumentBuffers) {
   audioCtx.decodeAudioData(noteBuffer, function(buffer) {
     instrumentBuffers[key] = buffer;
     if (Object.keys(instrumentData).length === Object.keys(instrumentBuffers).length) {
-      console.log('done');
     }
   });
 }

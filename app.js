@@ -32,11 +32,11 @@ io.on('connection', function(socket) {
   });
 
   socket.on('keyup', function(data) {
-    emitAll('stop', data);
+    emitAll('stopnote', data);
   });
 
   socket.on('keydown', function(data) {
-    emitAll('start', data);
+    emitAll('startnote', data);
   });
 });
 
